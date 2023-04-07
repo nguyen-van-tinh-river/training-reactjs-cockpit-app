@@ -1,28 +1,21 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import {
   EditOutlined,
-  DeleteOutlined,
-  UsergroupDeleteOutlined,
   SaveOutlined,
-  ClearOutlined,
-  SearchOutlined,
 } from '@ant-design/icons';
 import {
   Breadcrumb,
   theme,
   Row,
   Col,
-  Space,
   Button,
   Select,
   Form,
   Input,
 } from 'antd';
-import type { ColumnsType } from 'antd/es/table';
-import { Link } from "react-router-dom";
-import { MST_USERS } from '../../../databases';
+import { Link, redirect } from "react-router-dom";
 import './PageUserData.css';
-import { findUserByCondition } from '../../../services/UserService';
+import { findById, onInsert, onUpdate } from '../../../services/UserService';
 
 const { Option } = Select;
 
@@ -41,74 +34,77 @@ function PageUserData() {
   const {
     token: { colorBgContainer },
   } = theme.useToken();
+  
+  const params = new URLSearchParams(window.location.search)
+  const id = params.get('_id');
 
-  const columns: ColumnsType<MST_USERS> = [
-    {
-      title: 'Họ tên',
-      dataIndex: 'name',
-      key: 'name',
-      render: (text: string) => <a>{text}</a>,
-    },
-    {
-      title: 'Email',
-      dataIndex: 'email',
-      key: 'email',
-    },
-    {
-      title: 'Nhóm',
-      dataIndex: 'group_role',
-      key: 'group_role',
-    },
-    {
-      title: 'Trạng Thái',
-      dataIndex: 'is_active',
-      key: 'is_active',
-      render: (isActive: boolean) => (
-        <p className={isActive ? 'is_active' : 'is_block'}>{ isActive ? 'Đang hoạt động' : 'Tạm khóa' }</p>
-      ),
-    },
-    {
-      title: '',
-      key: 'action',
-      render: (_: any, record: MST_USERS) => (
-        <Space size="small">
-          <Button type='primary' ><EditOutlined /></Button>
-          <Button type="primary" danger><DeleteOutlined /></Button>
-          <Button><UsergroupDeleteOutlined /></Button>
-        </Space>
-      ),
-    },
-  ];
-
-  const [users, setUsers] = useState<MST_USERS[]>([]);
+  const [form] = Form.useForm();
 
   useEffect(() => {
-    // const rows: MST_USERS[] = findUserByCondition();
-    // console.log('ROWS ==> ', rows);
-    // setUsers(rows);
+    if (id) {
+      GetDetail(id)
+    }
   }, [])
+
+  const GetDetail = (_id?: string) => {
+    findById(_id).then(res => {
+      let { data } = res;
+      data['is_active'] = `${data['is_active']}`;
+      form.setFieldsValue(data)
+    }).catch(err => {
+      console.log(err);
+    })
+  }
+
+  const OnSave = () => {
+    const formData = form.getFieldsValue();
+    formData['is_active'] = JSON.parse(formData['is_active']);
+    if (id) {
+      onUpdate({
+        data: {
+          _id: id,
+          ...formData
+        }
+      }).then(res => {
+        console.log(res);
+      }).catch(err => {
+        console.log(err);
+      })
+    } else {
+      onInsert({
+        data: formData
+      }).then(res => {
+        console.log(res);
+        redirect("/users");
+      }).catch(err => {
+        console.log(err);
+      })
+    }
+  }
 
   return (
     <>
-      <Breadcrumb style={{ margin: '16px 0' }}>
-        <Breadcrumb.Item>
-          <Link to="/">
-            Home
-          </Link>
-        </Breadcrumb.Item>
-        <Breadcrumb.Item>
-          <Link to="/users">
-            Users
-          </Link>
-        </Breadcrumb.Item>
-        <Breadcrumb.Item>Add</Breadcrumb.Item>
-      </Breadcrumb>
+      <Breadcrumb
+        style={{ margin: '16px 0' }}
+        items={[
+          {
+            title: <Link to="/">Home</Link>
+          },
+          {
+            title: <Link to="/users">Users</Link>
+          },
+          {
+            title: 'Add'
+          }
+        ]}
+      />
       <div style={{ padding: 24, minHeight: 360, background: colorBgContainer }}>
         
           <Form
             {...formItemLayout}
             name="control-hooks"
             autoComplete="off"
+            form={form}
           >
             <Row gutter={16}>
               <Col className="gutter-row" span={12}>
@@ -135,14 +131,13 @@ function PageUserData() {
                   <Input.Password prefix={<EditOutlined />} />
                 </Form.Item>
 
-                <Form.Item name="name" label="Trạng thái">
+                <Form.Item name="is_active" label="Trạng thái">
                   <Select
                     placeholder="Chọn trạng thái"
                     allowClear
                   >
-                    <Option value="male">male</Option>
-                    <Option value="female">female</Option>
-                    <Option value="other">other</Option>
+                    <Option value="true">Đang hoạt động</Option>
+                    <Option value="false">Tạm khóa</Option>
                   </Select>
                 </Form.Item>
 
@@ -151,15 +146,15 @@ function PageUserData() {
                     placeholder="Chọn nhóm"
                     allowClear
                   >
-                    <Option value="male">male</Option>
-                    <Option value="female">female</Option>
-                    <Option value="other">other</Option>
+                    <Option value="Admin">Admin</Option>
+                    <Option value="Editor">Editor</Option>
+                    <Option value="Reviewer">Reviewer</Option>
                   </Select>
                 </Form.Item>
               </Col>
               <Col span={12} offset={3}>
-                <Button type="primary">
-                <SaveOutlined /> Lưu Lại
+                <Button type="primary" onClick={OnSave}>
+                  <SaveOutlined /> Lưu Lại
                 </Button>
               </Col>
             </Row>

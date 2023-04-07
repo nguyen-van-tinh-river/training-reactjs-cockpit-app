@@ -1,14 +1,9 @@
 import {
-  Routes,
-  Route,
-  Outlet,
-  Link,
-  useMatch,
-  useResolvedPath,
+  useNavigate,
+  useLocation
 } from "react-router-dom";
-import type { LinkProps } from "react-router-dom";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   DashboardOutlined,
   UsergroupAddOutlined,
@@ -19,46 +14,47 @@ import './MyMenu.css';
 
 const { Sider } = Layout;
 
-function CustomLink({ children, to, ...props }: LinkProps) {
-  let resolved = useResolvedPath(to);
-  let match = useMatch({ path: resolved.pathname, end: true });
-
-  return (
-    <div>
-      <Link
-        className={match ? 'active' : ''}
-        to={to}
-        {...props}
-      >
-        {children}
-      </Link>
-    </div>
-  );
-}
-
 const MyMenu = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(false);
+  const [current, setCurrent] = useState('/');
+
+  useEffect(() => {
+    console.log(location.pathname);
+    const pathItems = location.pathname.split('/')
+    setCurrent(`/${pathItems[1]}`)
+  }, [])
 
   return (
     <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
       <div style={{ height: 32, margin: 16, background: 'rgba(255, 255, 255, 0.2)' }} />
-      <Menu theme="dark" mode="inline">
-        <Menu.Item key="1">
-          <CustomLink to="/">
-          <DashboardOutlined /> Dashboard
-          </CustomLink>
-        </Menu.Item>
-        <Menu.Item key="2">
-          <CustomLink to="/users">
-            <UsergroupAddOutlined /> Users
-          </CustomLink>
-        </Menu.Item>
-        <Menu.Item key="3">
-          <CustomLink to="/products">
-            <BarcodeOutlined /> Products
-          </CustomLink>
-        </Menu.Item>
-      </Menu>
+      <Menu
+        onClick={(info) => {
+          setCurrent(info.key)
+          navigate(info.key)
+        }}
+        theme="dark"
+        mode="inline"
+        selectedKeys={[current]}
+        items={[
+          {
+            label: 'Dashboard',
+            key: '/',
+            icon: <DashboardOutlined />
+          },
+          {
+            label: 'Users',
+            key: '/users',
+            icon: <UsergroupAddOutlined />
+          },
+          {
+            label: 'Products',
+            key: '/products',
+            icon: <BarcodeOutlined />
+          },
+        ]}
+      />
     </Sider>
   );
 };

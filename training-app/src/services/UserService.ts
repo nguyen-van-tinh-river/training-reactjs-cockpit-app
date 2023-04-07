@@ -1,20 +1,39 @@
-import { http } from '../core/http';
-import { PARAMS_SEARCH_MST_USERS, MST_USERS } from '../databases'
+import axios from 'axios';
 
-const API_URL = 'http://localhost:2001';
+const API_URL = 'http://localhost:2001/api';
+const API_KEY = 'USR-2c4367940c6330fbbdcf5a54122f6c6aab11a3dc';
+const API_HEADERS = {
+    headers: {
+        'Content-Type': 'application/json',
+        "api-key": `${API_KEY}`
+    }
+}
 
-const findUserByCondition = (name?: string, email?: string, groupRole?: string, isActive?: boolean) => {
-    let filter = {
-        name: '',
-        email: '',
-        groupRole: '',
-        isActive: '',
-    };
-    // filter={"_id":"642b90ce4f6e68a2cb018fe3"}&sort={"name":1}&fields={"name": 1}&limit=20&skip=
+const findById = (_id?: string) => {
+    return axios.get(`${API_URL}/content/item/mst_users/${_id}`, API_HEADERS)
+}
 
-    return http.get(`${API_URL}/mst_users`)
+const findUserByCondition = (filter: object, sort: object, fields: object) => {
+    let params = `filter=${JSON.stringify(filter)}&sort=${JSON.stringify(sort)}&fields=${JSON.stringify(fields)}`;
+    return axios.get(`${API_URL}/content/items/mst_users?${params}`, API_HEADERS)
+}
+
+const onDelete = (_id: string) => {
+    return axios.delete(`${API_URL}/content/item/mst_users/${_id}`, API_HEADERS);
+}
+
+const onUpdate = (fields: object) => {
+    return axios.post(`${API_URL}/content/item/mst_users`, fields, API_HEADERS);
+}
+
+const onInsert = (fields: object) => {
+    return axios.post(`${API_URL}/content/item/mst_users`, fields, API_HEADERS);
 }
 
 export {
-    findUserByCondition
+    findById,
+    findUserByCondition,
+    onDelete,
+    onUpdate,
+    onInsert,
 };
