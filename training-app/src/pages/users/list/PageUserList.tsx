@@ -120,7 +120,7 @@ function PageUserList() {
 
   const OnSearch = () => {
     const formData = form.getFieldsValue();
-    findUserByCondition({}, {}, {}).then((res) => {
+    findUserByCondition({}, {_id: -1}, {}).then((res) => {
       const { data } = res;
       let items: MST_USERS[] = data;
       if (items) {

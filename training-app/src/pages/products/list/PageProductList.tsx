@@ -93,7 +93,7 @@ function PageProductList() {
 
   const OnSearch = () => {
     const formData = form.getFieldsValue();
-    findByCondition({}, {}, {}).then((res) => {
+    findByCondition({}, {_id: -1}, {}).then((res) => {
       const { data } = res;
       let items: MST_PRODUCTS[] = data;
       if (items) {
