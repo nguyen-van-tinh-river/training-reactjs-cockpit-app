@@ -24,8 +24,6 @@ package-lock.json
 /lib/**/vendor-bin/*
 /lib/**/\.travis/*
 /lib/**/\.travis.yml
-/storage/*.*
-/storage/*/*
 /config/*
 /tests/*
 /node_modules
