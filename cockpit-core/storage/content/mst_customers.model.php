@@ -1,0 +1,108 @@
+<?php
+ return [
+  'name' => 'mst_customers',
+  'label' => 'mst_customers',
+  'info' => '',
+  'type' => 'collection',
+  'fields' => [
+    0 => [
+      'name' => 'customer_name',
+      'type' => 'text',
+      'label' => 'customer_name',
+      'info' => '',
+      'group' => '',
+      'i18n' => false,
+      'required' => true,
+      'multiple' => false,
+      'meta' => [
+      ],
+      'opts' => [
+        'multiline' => false,
+        'showCount' => true,
+        'readonly' => false,
+        'placeholder' => NULL,
+        'minlength' => NULL,
+        'maxlength' => NULL,
+        'list' => NULL,
+      ],
+    ],
+    1 => [
+      'name' => 'email',
+      'type' => 'text',
+      'label' => 'email',
+      'info' => '',
+      'group' => '',
+      'i18n' => false,
+      'required' => true,
+      'multiple' => false,
+      'meta' => [
+      ],
+      'opts' => [
+        'multiline' => false,
+        'showCount' => true,
+        'readonly' => false,
+        'placeholder' => NULL,
+        'minlength' => NULL,
+        'maxlength' => NULL,
+        'list' => NULL,
+      ],
+    ],
+    2 => [
+      'name' => 'tel_num',
+      'type' => 'number',
+      'label' => 'tel_num',
+      'info' => '',
+      'group' => '',
+      'i18n' => false,
+      'required' => true,
+      'multiple' => false,
+      'meta' => [
+      ],
+      'opts' => [
+      ],
+    ],
+    3 => [
+      'name' => 'address',
+      'type' => 'text',
+      'label' => 'address',
+      'info' => '',
+      'group' => '',
+      'i18n' => false,
+      'required' => true,
+      'multiple' => false,
+      'meta' => [
+      ],
+      'opts' => [
+        'multiline' => false,
+        'showCount' => true,
+        'readonly' => false,
+        'placeholder' => NULL,
+        'minlength' => NULL,
+        'maxlength' => NULL,
+        'list' => NULL,
+      ],
+    ],
+    4 => [
+      'name' => 'is_active',
+      'type' => 'boolean',
+      'label' => 'is_active',
+      'info' => '',
+      'group' => '',
+      'i18n' => false,
+      'required' => false,
+      'multiple' => false,
+      'meta' => [
+      ],
+      'opts' => [
+      ],
+    ],
+  ],
+  'preview' => [
+  ],
+  'group' => '',
+  'meta' => NULL,
+  '_created' => 1681109164,
+  '_modified' => 1681109229,
+  'color' => NULL,
+  'revisions' => false,
+];
